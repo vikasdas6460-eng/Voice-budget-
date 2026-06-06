@@ -21,7 +21,8 @@ const { prompt } = body;
     );
     const data = await response.json();
     const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
-    res.status(200).json({ text });
+    res.status(200).json({ text, debug: data });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
