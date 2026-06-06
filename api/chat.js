@@ -10,7 +10,8 @@ export default async function handler(req, res) {
     prompt = body?.prompt || "";
   } catch { prompt = ""; }
 
-  if (!prompt) return res.status(200).json({ text: "[]" });
+  if (!prompt) return res.status(200).json({ text: "[]", debug: { body: req.body, type: typeof req.body } });
+
 
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
