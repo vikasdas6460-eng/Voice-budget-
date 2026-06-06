@@ -406,13 +406,15 @@ Rules:
 - Return ONLY valid JSON array, no explanation, no markdown backticks`;
 
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
-      });
-      const data = await res.json();
-      const raw = data.content?.[0]?.text || "[]";
+      const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
+const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+});
+const data = await res.json();
+const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
+
       const clean = raw.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);
       const newEntries = parsed.map((p, i) => ({
