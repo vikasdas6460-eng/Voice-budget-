@@ -5,10 +5,15 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
 
   let prompt = "";
-  try {
-    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-    prompt = body?.prompt || "";
-  } catch { prompt = ""; }
+try {
+  let raw = "";
+  await new Promise((resolve) => {
+    req.on("data", (chunk) => { raw += chunk; });
+    req.on("end", resolve);
+  });
+  prompt = JSON.parse(raw)?.prompt || "";
+} catch { prompt = ""; }
+
 
   if (!prompt) return res.status(200).json({ text: "[]", debug: { body: req.body, type: typeof req.body } });
 
