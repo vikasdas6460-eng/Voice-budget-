@@ -7,7 +7,9 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
 
   try {
-    const { prompt } = req.body;
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+const { prompt } = body;
+
     const geminiKey = process.env.VITE_GEMINI_API_KEY;
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
