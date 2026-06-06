@@ -357,7 +357,8 @@ export default function VoiceBudget() {
     chunksRef.current = []; setTranscript(""); setStatusMsg("");
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
       const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const r = new SR(); r.continuous = true; r.interimResults = true; r.lang = "hi-IN";
+      const r = new SR(); r.continuous = true; r.interimResults = true; r.lang = "en-IN";
+
       r.onresult = (e) => { let f = ""; for (let i = 0; i < e.results.length; i++) f += e.results[i][0].transcript + " "; setTranscript(f.trim()); };
       r.start(); recognitionRef.current = r;
     }
