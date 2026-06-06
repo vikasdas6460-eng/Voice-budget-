@@ -406,14 +406,13 @@ Rules:
 - Return ONLY valid JSON array, no explanation, no markdown backticks`;
 
     try {
-      const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
-const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`, {
+      const res = await fetch("/api/chat", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  body: JSON.stringify({ prompt })
 });
 const data = await res.json();
-const raw = data.candidates?.[0]?.content?.parts?.[0]?.text || "[]";
+const raw = data.text || "[]";
 
       const clean = raw.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);
