@@ -24,7 +24,22 @@ export default async function handler(req, res) {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        body: JSON.stringify({ 
+  contents: [{ 
+    parts: [{ 
+      text: `Extract expenses from this text and return ONLY a JSON array, no other text, no markdown, no explanation. Just the raw JSON array.
+
+Text: "${prompt}"
+
+Return format:
+[{"item":"item name","category":"Food & Drinks","amount":500,"type":"debit","paymentMethod":"Cash"}]
+
+Categories must be one of: Food & Drinks, Transport, Shopping, Entertainment, Subscriptions, Credit, Others
+Type is debit for expenses, credit for money received.` 
+    }] 
+  }] 
+}),
+
       }
     );
     const data = await response.json();
