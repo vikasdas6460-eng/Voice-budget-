@@ -406,13 +406,21 @@ Rules:
 - Return ONLY valid JSON array, no explanation, no markdown backticks`;
 
     try {
-      const res = await fetch("/api/chat", {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ prompt })
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
+  },
+  body: JSON.stringify({
+    model: "llama3-8b-8192",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0.1
+  })
 });
 const data = await res.json();
-const raw = data.text || "[]";
+const raw = data.choices?.[0]?.message?.content || "[]";
+
 
       const clean = raw.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);
