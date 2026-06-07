@@ -384,26 +384,15 @@ export default function VoiceBudget() {
     if (!spokenText.trim()) { setStatusMsg("Kuch bola nahi gaya. Please record again."); return; }
     setProcessing(true); setStatusMsg("Processing...");
     const today = formatDate(new Date());
-    const prompt = `You are a budget tracker AI for an Indian user who speaks Hinglish.
+    const prompt = `Return ONLY a JSON array, nothing else. No markdown, no explanation.
 
-User said: "${spokenText}"
+Input: "${spokenText}"
 
-Extract ALL expense and income items. For each return a JSON array:
-[
-  {
-    "item": "item name in English",
-    "category": one of ["Food & Drinks","Transport","Shopping","Entertainment","Subscriptions","Credit","Others"],
-    "amount": number in rupees,
-    "type": "debit" or "credit",
-    "paymentMethod": one of ["Debit Card","Credit Card","Cash","UPI/GPay","Unknown"]
-  }
-]
+Output format: [{"item":"name","category":"Food & Drinks","amount":100,"type":"debit","paymentMethod":"Cash"}]
 
-Rules:
-- "mila","received","aaya" → type: "credit"
-- All purchases → type: "debit"
-- Detect payment method from words: "debit card","DC" → Debit Card; "credit card","CC" → Credit Card; "cash","nakit" → Cash; "gpay","upi","paytm","phonepe" → UPI/GPay; if not mentioned → Unknown
-- Return ONLY valid JSON array, no explanation, no markdown backticks`;
+Categories: Food & Drinks, Transport, Shopping, Entertainment, Subscriptions, Credit, Others
+type is debit for spending, credit for receiving money.`;
+
 
     try {
       const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
